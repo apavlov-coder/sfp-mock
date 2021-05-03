@@ -9,11 +9,21 @@ import org.springframework.scheduling.annotation.Scheduled;
 @Configuration
 @EnableScheduling
 public class ApplicationConfig {
+
+    private final SenderService senderService;
+
     @Autowired
-    SenderService senderService;
+    public ApplicationConfig(SenderService senderService) {
+        this.senderService = senderService;
+    }
 
     @Scheduled(fixedDelay = 1000 * 10)
     public void sendReport() {
         senderService.sendReport();
+    }
+
+    @Scheduled(fixedDelay = 1000 * 10, initialDelay = 1000 * 2)
+    public void sendDoc() {
+        senderService.sendDoc();
     }
 }
