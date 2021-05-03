@@ -13,8 +13,13 @@ public class Id {
     private String numberLong;
 
     public static Id mock() {
+        Random random = new Random();
         Id id = new Id();
-        id.setNumberLong(Long.toString(new Random().nextLong()));
+        id.setNumberLong(
+                Integer.toString(
+                        2000 + random.nextInt(4000 - 2000)
+                )
+        );
         return id;
     }
 }
