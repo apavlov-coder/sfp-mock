@@ -85,37 +85,38 @@ public class Doc {
     private Integer trackMark;
 
     @JsonProperty(WAGONS_FIELD)
-    private List<Wagon> wagons;
+    private List<DocWagon> wagons;
 
     @JsonProperty(TRAINREPORTID_FIELD)
     private TrainReportId trainReportId;
 
-    public static Doc mock() {
+    public static Doc mock(long trainReportId, int trainNumber) {
         Random random = new Random();
         Doc doc = new Doc();
 
         doc.setId(Id.mock());
 
-        doc.setTransmisionStation(random.nextInt(9999));
-        doc.setTrainNumber(2000 + random.nextInt(4000 - 2000));
-        doc.setTrainOriginStationCode(random.nextInt(9999));
-        doc.setTrainSequentialNumber(random.nextInt(999));
-        doc.setTrainDestinationStationCode(random.nextInt(9999));
+        doc.setTransmisionStation(random.nextInt(9999)); // [0; 9999)
+        doc.setTrainNumber(trainNumber); // matches to report's
+        doc.setTrainOriginStationCode(random.nextInt(9999)); // [0; 9999)
+        doc.setTrainSequentialNumber(random.nextInt(999)); // [0; 999)
+        doc.setTrainDestinationStationCode(random.nextInt(9999)); // [0; 9999)
         doc.setIsEnumeratedFromHead(random.nextBoolean());
         doc.setTimestamp(Timestamp.mock());
-        doc.setTrainLength(53 + random.nextInt(97 - 53));
-        doc.setTrainWeightBrutto(2000 + random.nextInt(6000 - 2000));
-        doc.setCoveringCode(random.nextInt(2));
+        doc.setTrainLength(53 + random.nextInt(97 - 53)); // [53; 97)
+        doc.setTrainWeightBrutto(2000 + random.nextInt(6000 - 2000)); // [2000; 6000)
+        doc.setCoveringCode(random.nextInt(2)); // [0; 1]
         doc.setIndexH1(0);
         doc.setIndexH2(0);
         doc.setIndexH3(0);
         doc.setIndexH3(0);
         doc.setIndexH4(0);
         doc.setIsLively(random.nextBoolean());
-        doc.setTrackMark(random.nextInt(2));
+        doc.setTrackMark(random.nextInt(2)); // [0; 1]
 
-        List<Wagon> wagons = Stream
-                .generate(Wagon::mock)
+        // length [54; 97)
+        List<DocWagon> docWagons = Stream
+                .generate(DocWagon::mock)
                 //.limit(random.ints(53, 97).findFirst().orElseThrow())
                 .limit(random.ints(1, 3).findFirst().orElseThrow())
                 .collect(Collectors.toList());
