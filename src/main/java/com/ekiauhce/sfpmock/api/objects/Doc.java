@@ -120,8 +120,9 @@ public class Doc {
                 .limit(random.ints(1, 3).findFirst().orElseThrow())
                 .collect(Collectors.toList());
 
-        doc.setWagons(wagons);
-        doc.setTrainReportId(TrainReportId.mock());
+        doc.setWagons(docWagons);
+        doc.setTrainReportId(TrainReportId.mock(trainReportId)); // matches to report's
+
         return doc;
     }
 }
