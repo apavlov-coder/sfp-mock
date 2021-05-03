@@ -1,14 +1,13 @@
 package com.ekiauhce.sfpmock.api.objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Setter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
-@Setter
+@Data
 public class Timestamp {
     private static final String DATETIME_FIELD = "DateTime";
     private static final String TICKS_FIELD = "Ticks";
