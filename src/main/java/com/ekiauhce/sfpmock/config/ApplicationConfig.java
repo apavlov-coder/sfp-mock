@@ -6,24 +6,26 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import javax.annotation.PostConstruct;
+import java.util.Date;
+import java.util.Random;
+
 @Configuration
 @EnableScheduling
 public class ApplicationConfig {
-
-    private final SenderService senderService;
-
     @Autowired
-    public ApplicationConfig(SenderService senderService) {
-        this.senderService = senderService;
+    private SenderService senderService;
+
+    private Random random;
+
+    @PostConstruct
+    void init() {
+        Date date = new Date();
+        random = new Random(date.getTime());
     }
 
-    @Scheduled(fixedDelay = 1000 * 10)
+    @Scheduled(fixedDelay = 1000 * 60 * 20)
     public void sendReport() {
-        senderService.sendReport();
-    }
-
-    @Scheduled(fixedDelay = 1000 * 10, initialDelay = 1000 * 2)
-    public void sendDoc() {
-        senderService.sendDoc();
+        senderService.sendReport(random);
     }
 }

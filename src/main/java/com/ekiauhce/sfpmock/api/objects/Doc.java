@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -12,7 +13,6 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 public class Doc {
-
     private static final String ID_FIELD = "_id";
     private static final String TRANSIMSSIONSTATION_FIELD = "TransmisionStation";
     private static final String TRAINNUMBER_FIELD = "TrainNumber";
@@ -32,6 +32,9 @@ public class Doc {
     private static final String TRACKMARK_FIELD = "TrackMark";
     private static final String WAGONS_FIELD = "Wagons";
     private static final String TRAINREPORTID_FIELD = "TrainReportId";
+
+    private static List<Integer> formerStationList = Arrays.asList(6169, 6110);
+    private static List<Integer> destinationStationList = Arrays.asList(6573, 8000);
 
     @JsonProperty(ID_FIELD)
     private Id id;
@@ -55,7 +58,7 @@ public class Doc {
     private Boolean isEnumeratedFromHead;
 
     @JsonProperty(TIMESTAMP_FIELD)
-    private Timestamp timestamp;
+    private DateSender dateSender;
 
     @JsonProperty(TRAINLENGTH_FIELD)
     private Integer trainLength;
@@ -85,45 +88,41 @@ public class Doc {
     private Integer trackMark;
 
     @JsonProperty(WAGONS_FIELD)
-    private List<DocWagon> wagons;
+    private List<Wagon> wagons;
 
     @JsonProperty(TRAINREPORTID_FIELD)
     private TrainReportId trainReportId;
 
-    public static Doc mock(long trainReportId, int trainNumber) {
-        Random random = new Random();
+    public static Doc mock(Random random) {
+
         Doc doc = new Doc();
 
-        doc.setId(Id.mock());
-
-        doc.setTransmisionStation(random.nextInt(9999)); // [0; 9999)
-        doc.setTrainNumber(trainNumber); // matches to report's
-        doc.setTrainOriginStationCode(random.nextInt(9999)); // [0; 9999)
-        doc.setTrainSequentialNumber(random.nextInt(999)); // [0; 999)
-        doc.setTrainDestinationStationCode(random.nextInt(9999)); // [0; 9999)
+        doc.setId(Id.mock(random));
+        doc.setTransmisionStation(random.nextInt(9999));
+        doc.setTrainNumber(2000 + random.nextInt(4000 - 2000));
+        doc.setTrainOriginStationCode(formerStationList.get(random.nextInt(9999) % formerStationList.size()));
+        doc.setTrainSequentialNumber(random.nextInt(999));
+        doc.setTrainDestinationStationCode(destinationStationList.get(random.nextInt(9999) % destinationStationList.size()));
         doc.setIsEnumeratedFromHead(random.nextBoolean());
-        doc.setTimestamp(Timestamp.mock());
-        doc.setTrainLength(53 + random.nextInt(97 - 53)); // [53; 97)
-        doc.setTrainWeightBrutto(2000 + random.nextInt(6000 - 2000)); // [2000; 6000)
-        doc.setCoveringCode(random.nextInt(2)); // [0; 1]
+        doc.setDateSender(DateSender.mock());
+        doc.setTrainWeightBrutto(2000 + random.nextInt(6000 - 2000));
+        doc.setCoveringCode(random.nextInt(2));
         doc.setIndexH1(0);
         doc.setIndexH2(0);
         doc.setIndexH3(0);
         doc.setIndexH3(0);
         doc.setIndexH4(0);
         doc.setIsLively(random.nextBoolean());
-        doc.setTrackMark(random.nextInt(2)); // [0; 1]
+        doc.setTrackMark(random.nextInt(2));
 
-        // length [54; 97)
-        List<DocWagon> docWagons = Stream
-                .generate(DocWagon::mock)
-                //.limit(random.ints(53, 97).findFirst().orElseThrow())
-                .limit(random.ints(1, 3).findFirst().orElseThrow())
+        List<Wagon> wagons = Stream
+                .generate(Wagon::mock)
+                .limit(57 + random.nextInt(40))
                 .collect(Collectors.toList());
 
-        doc.setWagons(docWagons);
-        doc.setTrainReportId(TrainReportId.mock(trainReportId)); // matches to report's
-
+        doc.setWagons(wagons);
+        doc.setTrainLength(wagons.size());
+        doc.setTrainReportId(TrainReportId.mock(random));
         return doc;
     }
 }

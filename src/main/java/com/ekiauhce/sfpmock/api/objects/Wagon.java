@@ -3,10 +3,12 @@ package com.ekiauhce.sfpmock.api.objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Setter;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 @Setter
-public class DocWagon {
+public class Wagon {
     private static final String SKUNUMBER_FIELD = "SKUNumber";
     private static final String ROLLERBEARINGSMARK_FIELD = "RollerBearingsMark";
     private static final String CARGOWEIGHTTON_FIELD = "CargoWeightTon";
@@ -22,6 +24,8 @@ public class DocWagon {
     private static final String TAREWEIGHTTON_FIELD = "TareWeightTon";
     private static final String NOTE_FIELD = "Note";
     private static final String BORDERSTATION_FIELD = "BorderStation";
+
+    private static List<Integer> destinationStationList = Arrays.asList(6500,6515, 8000);
 
     @JsonProperty(SKUNUMBER_FIELD)
     private String skunNumber;
@@ -68,26 +72,28 @@ public class DocWagon {
     @JsonProperty(BORDERSTATION_FIELD)
     private Integer borderStation;
 
-    public static DocWagon mock() {
+    public static Wagon mock() {
+
+
         Random random = new Random();
-        DocWagon docWagon = new DocWagon();
+        Wagon wagon = new Wagon();
 
-        docWagon.setSkunNumber(Integer.toString(random.nextInt(99999999)));
-        docWagon.setRollerBearingsMark(random.nextInt(2));
-        docWagon.setCargoWeightTon(80 + random.nextInt(100 - 80));
-        docWagon.setDestination(random.nextInt(9999));
-        docWagon.setCargoCode(random.nextInt(99999));
-        docWagon.setReceiever(random.nextInt(9999));
-        docWagon.setTrackCode(random.nextInt(10));
-        docWagon.setCoveringCode(random.nextInt(10));
-        docWagon.setCrossection(random.nextInt(10));
-        docWagon.setSealNumber(random.nextInt(10));
-        docWagon.setContainersNumerator(random.nextInt());
-        docWagon.setContainersDenominator(random.nextInt());
-        docWagon.setTareWeightTone(random.nextInt());
-        docWagon.setNote(Integer.toString(random.nextInt()));
-        docWagon.setBorderStation(random.nextInt(9999));
+        wagon.setSkunNumber(Integer.toString(random.nextInt(99999999)));
+        wagon.setRollerBearingsMark(random.nextInt(2));
+        wagon.setCargoWeightTon(80 + random.nextInt(100 - 80));
+        wagon.setDestination(destinationStationList.get(random.nextInt(9999) % destinationStationList.size()));
+        wagon.setCargoCode(random.nextInt(99999));
+        wagon.setReceiever(random.nextInt(9999));
+        wagon.setTrackCode(random.nextInt(10));
+        wagon.setCoveringCode(random.nextInt(10));
+        wagon.setCrossection(random.nextInt(10));
+        wagon.setSealNumber(random.nextInt(10));
+        wagon.setContainersNumerator(random.nextInt());
+        wagon.setContainersDenominator(random.nextInt());
+        wagon.setTareWeightTone(random.nextInt());
+        wagon.setNote(Integer.toString(random.nextInt()));
+        wagon.setBorderStation(random.nextInt(9999));
 
-        return docWagon;
+        return wagon;
     }
 }
