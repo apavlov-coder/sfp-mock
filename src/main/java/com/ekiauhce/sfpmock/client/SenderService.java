@@ -1,11 +1,16 @@
 package com.ekiauhce.sfpmock.client;
 
 import com.ekiauhce.sfpmock.api.objects.Doc;
-import com.ekiauhce.sfpmock.api.objects.Report;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Random;
 
 @Service
@@ -14,28 +19,32 @@ public class SenderService {
     @Value("${receiver.url}")
     private String receiverUrl;
 
-    private final Random docRandom = new Random(19);
-    private final Random reportRandom = new Random(19);
+    private HttpHeaders headers;
 
-    public void sendDoc() {
-        RestTemplate restTemplate = new RestTemplate();
 
-        Doc doc = Doc.mock(
-                docRandom.nextLong(),
-                2000 + docRandom.nextInt(4000 - 2000)
-        );
+    private ObjectMapper mapper = new ObjectMapper();
 
-        restTemplate.postForObject(receiverUrl, doc, Doc.class);
+    private RestTemplate restTemplate;
+
+    public SenderService() {
+        headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        restTemplate = new RestTemplate();
     }
 
-    public void sendReport() {
-        RestTemplate restTemplate = new RestTemplate();
+    public void sendReport(Random random) {
+        StringWriter writer = new StringWriter();
+        try {
+            Doc val = Doc.mock(random);
+            mapper.writeValue(writer, val);
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String requestJson = writer.toString();
 
-        Report report = Report.mock(
-                reportRandom.nextLong(),
-                2000 + reportRandom.nextInt(4000 - 2000)
-        );
-
-        restTemplate.postForObject(receiverUrl, report, Report.class);
+        HttpEntity<String> entity = new HttpEntity<>(requestJson, headers);
+        String answer = restTemplate.postForObject(receiverUrl, entity, String.class);
+        System.out.println(answer);
     }
 }
