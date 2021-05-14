@@ -30,8 +30,8 @@ public class ApplicationConfig {
         senderService.sendReport(random);
     }
 
-    @Scheduled(fixedDelay = 1000 * 60 * 20, initialDelay = 1000 * 60)
-    public void sendDoc() {
-        senderService.sendDoc();
-    }
+//    @Scheduled(fixedDelay = 1000 * 60 * 20, initialDelay = 1000 * 60)
+//    public void sendDoc() {
+//        senderService.sendDoc();
+//    }
 }
