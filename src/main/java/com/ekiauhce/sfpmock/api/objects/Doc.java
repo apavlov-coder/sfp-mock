@@ -7,8 +7,6 @@ import lombok.Setter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Getter
 @Setter
@@ -91,15 +89,15 @@ public class Doc {
     private List<Wagon> wagons;
 
     @JsonProperty(TRAINREPORTID_FIELD)
-    private TrainReportId trainReportId;
+    private Id trainReportId;
 
-    public static Doc mock(Random random) {
+    public static Doc mock(Random random, Id docId, Id trainReportId, int trainNumber, List<Wagon> wagons) {
 
         Doc doc = new Doc();
 
-        doc.setId(Id.mock(random));
+        doc.setId(docId);
         doc.setTransmisionStation(random.nextInt(9999));
-        doc.setTrainNumber(2000 + random.nextInt(4000 - 2000));
+        doc.setTrainNumber(trainNumber);
         doc.setTrainOriginStationCode(formerStationList.get(random.nextInt(9999) % formerStationList.size()));
         doc.setTrainSequentialNumber(random.nextInt(999));
         doc.setTrainDestinationStationCode(destinationStationList.get(random.nextInt(9999) % destinationStationList.size()));
@@ -115,14 +113,14 @@ public class Doc {
         doc.setIsLively(random.nextBoolean());
         doc.setTrackMark(random.nextInt(2));
 
-        List<Wagon> wagons = Stream
-                .generate(Wagon::mock)
-                .limit(57 + random.nextInt(40))
-                .collect(Collectors.toList());
+//        List<Wagon> wagons = Stream
+//                .generate(Wagon::mock)
+//                .limit(57 + random.nextInt(40))
+//                .collect(Collectors.toList());
 
         doc.setWagons(wagons);
         doc.setTrainLength(wagons.size());
-        doc.setTrainReportId(TrainReportId.mock(random));
+        doc.setTrainReportId(trainReportId);
         return doc;
     }
 }
